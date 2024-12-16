@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")!).render(
 			<Routes>
 				<Route element={<Layout />}>
 					<Route index element={<App />} />
-					<Route path="cover-letter-create" element={<CoverLetterCreation />} />
+					<Route path="create" element={<CoverLetterCreation />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

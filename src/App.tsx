@@ -1,13 +1,44 @@
-import { NavLink } from "react-router";
+import { useMutation } from "@tanstack/react-query";
+// import { NavLink } from "react-router";
+
+function createCoverLetter({ message = "" }) {
+	return fetch("http://127.0.0.1:8000", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/json",
+		},
+		body: JSON.stringify(message),
+	});
+}
 
 function App() {
+	const mutate = useMutation({
+		mutationFn: createCoverLetter,
+		onSuccess: (data) => {
+			data.blob().then((blob) => {
+				const url = window.URL.createObjectURL(blob);
+				const a = document.createElement("a");
+				a.href = url;
+				a.download = "test.pdf";
+				document.body.appendChild(a);
+				a.click();
+				a.remove();
+				return;
+			});
+		},
+	});
+
 	return (
-		<div>
-			<div className="bg-slate-700 flex flex-col p-10">
-				<h1 className="text-white">Hello</h1>
-				<NavLink to="/">Main</NavLink>
-				<NavLink to="cover-letter-create">Create</NavLink>
-			</div>
+		<div className="card bg-base-100 w-96 shadow-xl">
+			<textarea className="textarea" placeholder="Hello"></textarea>
+			<button
+				className="w-1/2 self-center btn"
+				onClick={() => {
+					mutate.mutate({ message: "test" });
+				}}
+			>
+				post
+			</button>
 		</div>
 	);
 }
